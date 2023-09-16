@@ -10,8 +10,11 @@ pipeline {
     stages {
         stage('Source Code Management') {
             steps {
-                // Checkout the code from my GitHub repository.
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
+                // Checkout the code from your Git repository.
+                checkout([$class: 'GitSCM',
+                          branches: [[name: 'master']], 
+                          userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
+                ])
             }
         }
 
