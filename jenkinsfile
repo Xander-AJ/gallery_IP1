@@ -4,14 +4,14 @@ pipeline {
     environment {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
+        Render_Server_URL = 'https://john-alexander-ip-1.onrender.com/' // Set the Render server URL
     }
 
     stages {
         stage('Source Code Management') {
             steps {
-                // Checkout the code from your GitHub repository.
-                // Replace <YOUR_REPO_URL> with your actual repository URL.
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
+                // Checkout the code from my GitHub repository.
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
             }
         }
 
@@ -35,14 +35,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Run your tests. Modify this command based on your project.
+                // Run tests.
                 sh 'npm test'
 
                 // If tests fail, send an email notification.
                 catchError {
                     emailext body: 'Tests failed. Please check the build logs for details.',
                              subject: 'Test Results',
-                             to: 'xander.kamau7@gmail.com' // Replace with your email address.
+                             to: 'xander.kamau7@gmail.com' 
                 }
             }
         }
@@ -53,25 +53,18 @@ pipeline {
                     // Access the MongoDB connection string
                     def mongoConnectionString = env.MONGODB_CONNECTION
 
-                    // Include Render-specific deployment commands here, such as setting environment variables
-                    // and starting the server using 'node server'.
+                    // Access the Render server URL
+                    def renderServerURL = env.Render_Server_URL
 
-                    // For example:
-                    sh 'render deploy -- --build-env MONGO_URL="$mongoConnectionString"'
+                    // Deploy your application to Render
+                    // Start the server using 'node server'
+                    sh "npm install -g serve" // Install a simple HTTP server
+                    sh "npm run build" // Build your application (if needed)
+                    sh "serve -s build -l 3000 &" // Start the server in the background
+
+                    sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
                 }
             }
-        }
-
-        stage('Post-Deployment Actions') {
-            steps {
-                // Additional actions after deployment, if necessary.
-            }
-        }
-    }
-
-    post {
-        failure {
-            // Post-build actions for failure, if needed.
         }
     }
 }
