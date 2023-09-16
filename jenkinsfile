@@ -10,7 +10,8 @@ pipeline {
         stage('Source Code Management') {
             steps {
                 // Checkout the code from your GitHub repository.
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
+                // Replace <YOUR_REPO_URL> with your actual repository URL.
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
             }
         }
 
@@ -24,6 +25,7 @@ pipeline {
                         // Install project dependencies with npm.
                         sh 'npm install'
                         
+                        // Additional build steps if needed.
                     } else {
                         error('package.json not found. This is not a Node.js project.')
                     }
@@ -40,18 +42,22 @@ pipeline {
                 catchError {
                     emailext body: 'Tests failed. Please check the build logs for details.',
                              subject: 'Test Results',
-                             to: 'xander.kamau7@gmail.com.com'
+                             to: 'xander.kamau7@gmail.com' // Replace with your email address.
                 }
             }
         }
 
-        stage('Deployment') {
+        stage('Deployment to Render') {
             steps {
                 script {
                     // Access the MongoDB connection string
                     def mongoConnectionString = env.MONGODB_CONNECTION
 
-                    sh "export MONGO_URL=\"$mongoConnectionString\" && ./deploy-script.sh"
+                    // Include Render-specific deployment commands here, such as setting environment variables
+                    // and starting the server using 'node server'.
+
+                    // For example:
+                    sh 'render deploy -- --build-env MONGO_URL="$mongoConnectionString"'
                 }
             }
         }
