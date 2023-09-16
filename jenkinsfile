@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    environment {
+        MONGODB_CONNECTION = credentials('mongodb-connection')
+        GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
+    }
+
+    stages {
+        stage('Source Code Management') {
+            steps {
+                // Checkout the code from your GitHub repository.
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitSCMSource', remote: GITHUB_REPO_URL]], submoduleCfg: [], userRemoteConfigs: [[url: GITHUB_REPO_URL]]])
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    // Verify the existence of a package.json file.
+                    def packageJsonExists = fileExists('package.json')
+
+                    if (packageJsonExists) {
+                        // Install project dependencies with npm.
+                        sh 'npm install'
+                        
+                    } else {
+                        error('package.json not found. This is not a Node.js project.')
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run your tests. Modify this command based on your project.
+                sh 'npm test'
+
+                // If tests fail, send an email notification.
+                catchError {
+                    emailext body: 'Tests failed. Please check the build logs for details.',
+                             subject: 'Test Results',
+                             to: 'xander.kamau7@gmail.com.com'
+                }
+            }
+        }
+
+        stage('Deployment') {
+            steps {
+                script {
+                    // Access the MongoDB connection string
+                    def mongoConnectionString = env.MONGODB_CONNECTION
+
+                    sh "export MONGO_URL=\"$mongoConnectionString\" && ./deploy-script.sh"
+                }
+            }
+        }
+
+        stage('Post-Deployment Actions') {
+            steps {
+                // Additional actions after deployment, if necessary.
+            }
+        }
+    }
+
+    post {
+        failure {
+            // Post-build actions for failure, if needed.
+        }
+    }
+}
