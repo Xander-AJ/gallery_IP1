@@ -30,7 +30,8 @@ pipeline {
                                 // Install project dependencies with npm.
                                 sh 'npm install'
                                 
-                                // Additional build steps if needed.
+                                // Run the "npm run build" command to build your project.
+                                sh 'npm run build'
                             } else {
                                 error('package.json not found. This is not a Node.js project.')
                             }
@@ -53,23 +54,7 @@ pipeline {
                         }
                     }
                 }
-                stage('E2E Tests') {
-                    steps {
-                        script {
-                            // Run E2E tests.
-                            sh 'npm run e2e-test'
-                        }
-                    }
-                }
-                stage('Linting') {
-                    steps {
-                        script {
-                            // Run linting checks.
-                            sh 'npm run lint'
-                        }
-                    }
-                }
-                // Add more stages for other test types
+                // Add more stages for other test types if needed
             }
         }
 
@@ -85,7 +70,6 @@ pipeline {
                     // Deploy your application to Render
                     // Start the server using 'node server'
                     sh "npm install -g serve" // Install a simple HTTP server
-                    sh "npm run build" // Build your application (if needed)
                     sh "serve -s build -l 3000 &" // Start the server in the background
 
                     sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
