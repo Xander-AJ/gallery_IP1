@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-        stage('Deployment to Render') {
+        stage('Deployment to Render and MongoDB') {
             steps {
                 script {
                     // Access the MongoDB connection string
@@ -72,6 +72,8 @@ pipeline {
                     sh "npm install -g serve" // Install a simple HTTP server
                     sh "serve -s build -l 3000 &" // Start the server in the background
 
+                    // Connect to MongoDB (example using the MongoDB CLI)
+                    sh "mongo $mongoConnectionString 
                     sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
                 }
             }
