@@ -6,7 +6,7 @@ pipeline {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
         Render_Server_URL = 'https://john-alexander-ip-1.onrender.com/' // Set the Render server URL
-        Slack_URL = credentials('slack_webhook') // Reference the Slack webhook credential
+        Slack_URL = credentials(johnalexander_ip1-aaaakyakqc33fx5jtzbxv5gjry@moringaclassroom.slack.com) // Use your actual Slack webhook credential ID
     }
 
     stages {
@@ -14,8 +14,8 @@ pipeline {
             steps {
                 // Checkout the code from your Git repository.
                 checkout([$class: 'GitSCM',
-                          branches: [[name: 'master']], 
-                          userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
+                    branches: [[name: 'master']],
+                    userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
                 ])
             }
         }
@@ -69,11 +69,16 @@ pipeline {
             // Send a Slack notification if any stage fails
             script {
                 slackSend(
-                    color: '#FF0000', // Customize the color of the notification
-                    message: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                    baseUrl: env.Slack_URL, // Use the environment variable for the Slack URL
                     teamDomain: 'T05T4NLEG4R', // Your Slack workspace ID
+                    channel: '#johnalexander_ip1', // Your Slack channel name
+                    color: '#FF0000', // Customize the color of the notification
+                    botUser: false, // Specify if it's a bot user
                     tokenCredentialId: '', // Leave this empty when using webhook
-                    webhookUrl: env.Slack_URL // Use the environment variable for the Slack webhook
+                    notifyCommitters: false, // Specify if you want to notify committers
+                    iconEmoji: '', // Specify an emoji icon for the notification (optional)
+                    username: '', // Specify a username for the notification (optional)
+                    timestamp: '', // Specify a timestamp for the notification (optional)
                 )
             }
         }
