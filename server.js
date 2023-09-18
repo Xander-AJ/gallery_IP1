@@ -13,7 +13,7 @@ const app = express();
 
 // connecting the database
 
-mongodb+srv://johnalexander:QJPNCHVriDWW0NYe@ip-1-moringa.ksg9usc.mongodb.net/gallery_IP1
+const MONGODB_URI = 'mongodb+srv://johnalexander:QJPNCHVriDWW0NYe@ip-1-moringa.ksg9usc.mongodb.net/gallery_IP1';
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true  },(err)=>{
     if (err) {
         console.log(err)
