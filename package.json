@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha --exit",
     "start": "node server.js"
+    "build": "npm install && npm run build"
   },
   "keywords": [],
   "author": "johnalexander",
@@ -37,3 +38,4 @@
   },
   "homepage": "https://github.com/Xander-AJ/gallery_IP1#readme"
 }
+
