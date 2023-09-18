@@ -30,7 +30,7 @@ pipeline {
                         sh 'npm install'
                         
                         // Run the "npm run build" command to build your project.
-                        sh 'npm build'
+                        sh 'npm run build'
                     } else {
                         error('package.json not found. This is not a Node.js project.')
                     }
