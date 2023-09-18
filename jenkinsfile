@@ -56,7 +56,8 @@ pipeline {
                     sh "serve -s build -l 3000 &" // Start the server in the background
 
                     // Connect to MongoDB 
-                    sh "mongo ${mongoConnectionString} 
+                    sh "mongo ${mongoConnectionString}"
+
 
                     sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
                 }
