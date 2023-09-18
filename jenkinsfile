@@ -6,7 +6,6 @@ pipeline {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         SLACK_CREDENTIALS = credentials('slack_webhook') // Replace 'slack_webhook' with your actual Slack credential ID
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
-        Render_Server_URL = 'https://john-alexander-ip-1.onrender.com/' // Set the Render server URL
     }
 
     stages {
@@ -35,31 +34,6 @@ pipeline {
                     } else {
                         error('package.json not found. This is not a Node.js project.')
                     }
-                }
-            }
-        }
-
-        stage('Deployment to Render and MongoDB') {
-            steps {
-                script {
-                    // Access the GitHub PAT
-                    def githubPat = env.GITHUB_CREDENTIALS
-
-                    // Access the MongoDB connection string
-                    def mongoConnectionString = env.MONGODB_CONNECTION
-
-                    // Access the Render server URL
-                    def renderServerURL = env.Render_Server_URL
-
-                    // Deploy your application to Render
-                    // Start the server using 'node server'
-                    sh "npm install -g serve" // Install a simple HTTP server
-                    sh "serve -s build -l 3000 &" // Start the server in the background
-
-                    // Connect to MongoDB 
-                    sh "mongo ${mongoConnectionString}"
-
-                    sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
                 }
             }
         }
