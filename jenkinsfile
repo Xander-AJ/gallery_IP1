@@ -4,7 +4,7 @@ pipeline {
     environment {
         GITHUB_CREDENTIALS = credentials('GitHub_PAT') // Replace 'GitHub_PAT' with your actual GitHub credential ID
         MONGODB_CONNECTION = credentials('mongodb-connection')
-        SLACK_CREDENTIALS = credentials('slack-webhook') // Replace 'slack_webhook' with your actual Slack credential ID
+        SLACK_CREDENTIALS = credentials('slack_webhook') // Replace 'slack_webhook' with your actual Slack credential ID
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
         Render_Server_URL = 'https://john-alexander-ip-1.onrender.com/' // Set the Render server URL
     }
