@@ -6,6 +6,7 @@ pipeline {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
         Render_Server_URL = 'https://john-alexander-ip-1.onrender.com/' // Set the Render server URL
+        Slack_URL = credentials('slack_webhook') // Reference the Slack webhook credential
     }
 
     stages {
@@ -58,7 +59,6 @@ pipeline {
                     // Connect to MongoDB 
                     sh "mongo ${mongoConnectionString}"
 
-
                     sh "curl -sSf $renderServerURL" // This command checks if the site is accessible.
                 }
             }
@@ -66,13 +66,16 @@ pipeline {
     }
     post {
         failure {
-            // Send an email notification if any stage fails
-            emailext(
-                to: 'xander.kamau7@gmail.com',
-                subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
-                body: "The Jenkins pipeline has failed. Please investigate.",
-                attachLog: true
-            )
+            // Send a Slack notification if any stage fails
+            script {
+                slackSend(
+                    color: '#FF0000', // Customize the color of the notification
+                    message: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                    teamDomain: 'T05T4NLEG4R', // Your Slack workspace ID
+                    tokenCredentialId: '', // Leave this empty when using webhook
+                    webhookUrl: env.Slack_URL // Use the environment variable for the Slack webhook
+                )
+            }
         }
     }
 }
