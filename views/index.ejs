@@ -50,14 +50,19 @@
             <% images.forEach(function(image){ %>
 
               <div class="column">
-
                 <a href="/image/<%= image._id %>"> <img src="<%= image.path %>" class="responsive-img" alt="<%= image.name %>"> </a>
               </div>
             <% }); %>  
           </div>
             
-              
-            
+          <!-- Add Milestones here -->
+          <div class="center-align">
+            <h2>MILESTONE 2</h2>
+            <h2>MILESTONE 3</h2>
+            <h2>MILESTONE 4</h2>
+          </div>
+        <!-- Milestones end here -->
+
         <!-- <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img" alt=""> -->
     </div>
     
@@ -67,4 +72,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
-                
