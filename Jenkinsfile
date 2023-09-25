@@ -9,17 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Source Code Management') {
-            steps {
-                // Checkout the code from your Git repository.
-                checkout([$class: 'GitSCM',
-                          branches: [[name: 'master']], 
-                          userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
-                ])
-            }
-        }
-
-        stage('Build and Tests') {
+        stage('Install Node.js Dependencies') {
             steps {
                 script {
                     // Verify the existence of a package.json file.
@@ -28,12 +18,28 @@ pipeline {
                     if (packageJsonExists) {
                         // Install project dependencies with npm.
                         sh 'npm install'
-                        
-                        // Run the "npm run build" command to build your project.
-                        sh 'npm run build'
                     } else {
                         error('package.json not found. This is not a Node.js project.')
                     }
+                }
+            }
+        }
+
+        stage('Source Code Management') {
+            steps {
+                // Checkout the code from your Git repository.
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'master']],
+                    userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
+                ])
+            }
+        }
+
+        stage('Build and Tests') {
+            steps {
+                script {
+                    // Run the "npm run build" command to build your project.
+                    sh 'npm run build'
                 }
             }
         }
