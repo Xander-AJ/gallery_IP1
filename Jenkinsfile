@@ -8,8 +8,17 @@ pipeline {
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
     }
 
-
     stages {
+        stage('Source Code Management') {
+            steps {
+                // Checkout the code from your Git repository.
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'master']],
+                    userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
+                ])
+            }
+        }
+
         stage('Install Node.js Dependencies') {
             steps {
                 script {
@@ -26,21 +35,11 @@ pipeline {
             }
         }
 
-        stage('Source Code Management') {
-            steps {
-                // Checkout the code from your Git repository.
-                checkout([$class: 'GitSCM',
-                    branches: [[name: 'master']],
-                    userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: 'Xander-AJ']]
-                ])
-            }
-        }
-
-        stage('Build and Tests') {
+        stage('Tests') {
             steps {
                 script {
-                    // Run the "npm run build" command to build your project.
-                    sh 'npm run build'
+                    // Run the "npm run test" command to test your project.
+                    sh 'npm run test'
                 }
             }
         }
