@@ -45,6 +45,15 @@ pipeline {
             }
         }
     }
+
+    stage('Deploy') {
+            steps {
+                script {
+                    curl 'https://api.render.com/deploy/srv-ck40qquru70s73dgq4b0?key=1ynT5iRm8jo'
+                }
+            }
+        }
+    }
     post {
         failure {
             // Send a Slack notification if any stage fails
