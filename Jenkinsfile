@@ -6,6 +6,7 @@ pipeline {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         SLACK_CREDENTIALS = credentials('slack_webhook') // Replace 'slack_webhook' with your actual Slack credential ID
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
+        
     }
     tools {nodejs "NodeJS"}
 
@@ -48,7 +49,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    curl 'https://api.render.com/deploy/srv-ck40qquru70s73dgq4b0?key=1ynT5iRm8jo'
+                    curl '$RENDER_DEPLOY_URL'
                 }
             }
         }
