@@ -8,6 +8,7 @@ pipeline {
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
     }
 
+
     stages {
         stage('Install Node.js Dependencies') {
             steps {
