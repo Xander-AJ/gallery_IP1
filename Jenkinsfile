@@ -7,6 +7,7 @@ pipeline {
         SLACK_CREDENTIALS = credentials('slack_webhook') // Replace 'slack_webhook' with your actual Slack credential ID
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
     }
+    tools {nodejs "NodeJS"}
 
     stages {
         stage('Source Code Management') {
