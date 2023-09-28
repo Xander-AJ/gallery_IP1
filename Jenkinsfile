@@ -6,9 +6,11 @@ pipeline {
         MONGODB_CONNECTION = credentials('mongodb-connection')
         SLACK_CREDENTIALS = credentials('slack_webhook') // Replace 'slack_webhook' with your actual Slack credential ID
         GITHUB_REPO_URL = 'https://github.com/Xander-AJ/gallery_IP1'
-        
+        RENDER_DEPLOY_URL = credentials('render_deploy_hook') // Use the environment variable for the Render deploy hook
     }
-    tools {nodejs "NodeJS"}
+    tools {
+        nodejs "NodeJS"
+    }
 
     stages {
         stage('Source Code Management') {
@@ -49,7 +51,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    curl '$RENDER_DEPLOY_URL'
+                    // Deploy to Render using the specified Render deploy hook
+                    sh "curl -sSf ${env.RENDER_DEPLOY_URL}"
                 }
             }
         }
